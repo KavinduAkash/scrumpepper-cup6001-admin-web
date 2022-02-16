@@ -54,7 +54,7 @@ class LoginForm extends React.Component{
 				Cookies.set('68e78905f4cx', accessToken);
 				Cookies.set('68e75190f4cx', refreshToken);
 				this.setState({loading: false});
-				this.props.history.push("/app/project");
+				this.props.history.push("/app/corporate");
 
 			}).catch(async error => {
 			this.setState({loading: false});

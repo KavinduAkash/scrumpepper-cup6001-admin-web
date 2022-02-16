@@ -8,7 +8,9 @@ export const AppViews = () => {
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
         <Route path={`${APP_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
-        <Redirect from={`${APP_PREFIX_PATH}`} to={`${APP_PREFIX_PATH}/home`} />
+          <Route path={`${APP_PREFIX_PATH}/corporate`} component={lazy(() => import(`./corporate`))} />
+          <Route path={`${APP_PREFIX_PATH}/user`} component={lazy(() => import(`./user`))} />
+          <Redirect from={`${APP_PREFIX_PATH}`} to={`${APP_PREFIX_PATH}/home`} />
       </Switch>
     </Suspense>
   )
