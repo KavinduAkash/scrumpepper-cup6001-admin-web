@@ -103,7 +103,7 @@ class User extends React.Component {
                 fname: r.firstName,
                 lname: r.lastName,
                 email: r.email,
-                contact1: r.contact,
+                contact: r.contactNumber,
                 date: r.createdDate,
                 status: r.statusType,
                 action: <Button type={'text'}>View</Button>
