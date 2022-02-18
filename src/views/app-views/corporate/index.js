@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Table} from "antd";
+import {Button, Card, Col, Modal, Row, Select, Table} from "antd";
 import Cookies from 'js-cookie';
 import axios from "axios";
 
@@ -47,10 +47,14 @@ const columns = [
 ];
 
 
+const { Option } = Select;
+
 class Corporate extends React.Component {
 
     state = {
-        data_source: []
+        data_source: [],
+        openModal: false,
+        selected_corporate: null
     }
 
     componentDidMount() {
@@ -89,6 +93,20 @@ class Corporate extends React.Component {
         });
     }
 
+    setVisible = (val, open) => {
+        if(open) {
+            this.setState({
+                openModal: true,
+                selected_corporate: val
+            })
+        } else {
+            this.setState({
+                openModal: false,
+                selected_corporate: null
+            })
+        }
+    }
+
     render() {
 
         let data_source_list = [];
@@ -101,7 +119,7 @@ class Corporate extends React.Component {
                 email: r.email,
                 contact1: r.contactNumber1,
                 contact2: r.contactNumber2,
-                action: <Button type={'text'}>View</Button>
+                action: <Button type={'text'} onClick={()=>this.setVisible(r, true)}>View</Button>
             }
             data_source_list.push(obj);
         })
@@ -111,6 +129,81 @@ class Corporate extends React.Component {
                 <div>
                     <h2>Corporate</h2>
                 </div>
+                {
+                    this.state.openModal?
+                    <Modal
+                        title=""
+                        centered
+                        visible={this.state.openModal}
+                        onCancel={() => this.setVisible(null, false)}
+                        footer={false}
+                        width={1000}
+                    >
+                        <div>
+                            <Row>
+                                <Col>
+                                    <img src={(this.state.selected_corporate!=null)?this.state.selected_corporate.corporateLogo:'https://lecrawengineering.com/images/projects/placeholder.png'} alt="" width={270}/>
+                                </Col>
+                                <Col>
+                                    <div style={{marginLeft: '5px'}}>
+                                        <h3>{(this.state.selected_corporate!=null)?this.state.selected_corporate.name:""}</h3>
+                                        <table>
+                                            <tr>
+                                                <th>Address</th>
+                                                <td>:</td>
+                                                <td>{(this.state.selected_corporate!=null)?this.state.selected_corporate.address:""}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Email</th>
+                                                <td>:</td>
+                                                <td>{(this.state.selected_corporate!=null)?this.state.selected_corporate.email:""}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Contact 1</th>
+                                                <td>:</td>
+                                                <td>{(this.state.selected_corporate!=null)?this.state.selected_corporate.contactNumber1:""}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Contact 2</th>
+                                                <td>:</td>
+                                                <td>{(this.state.selected_corporate!=null)?this.state.selected_corporate.contactNumber2:""}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Status</th>
+                                                <td>:</td>
+                                                <td>{(this.state.selected_corporate!=null)?this.state.selected_corporate.statusType:""}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <hr/>
+                            <Row>
+                                <Col xs={24} sm={24} md={12} lg={6} xl={12}>
+                                    <Card title="Employees" bordered={false} style={{ width: '99%', textAlign: 'center', backgroundColor: '#90caf9', margin: '2px'}}>
+                                        <h1>{'0'}</h1>
+                                    </Card>
+                                </Col>
+                                <Col xs={24} sm={24} md={12} lg={6} xl={12}>
+                                    <Card title="Projects" bordered={false} style={{ width: '99%', textAlign: 'center', backgroundColor: '#90caf9', margin: '2px'}}>
+                                        <h1>{'0'}</h1>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <hr/>
+                            <Row>
+                                <Select value={(this.state.selected_corporate!=null)?this.state.selected_corporate.statusType:"DELETE"} style={{ width: 120 }}>
+                                    <Option value="ACTIVE">ACTIVE</Option>
+                                    <Option value="INACTIVE">INACTIVE</Option>
+                                    <Option value="DELETE">DELETE</Option>
+                                </Select>
+                                <Button type="primary" style={{marginLeft: '5px'}}>Update</Button>
+                            </Row>
+                        </div>
+                    </Modal>
+                        :
+                        null
+                }
                 <div>
                     <Table columns={columns} dataSource={data_source_list} />
                 </div>
