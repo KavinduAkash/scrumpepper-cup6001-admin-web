@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Table} from "antd";
+import {Button, Card, Col, Modal, Row, Select, Table} from "antd";
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -51,10 +51,14 @@ const columns = [
     },
 ];
 
+const { Option } = Select;
+
 class User extends React.Component {
 
     state = {
-        data_source: []
+        data_source: [],
+        selected_user: null,
+        openModal: false
     }
 
     componentDidMount() {
@@ -93,6 +97,20 @@ class User extends React.Component {
         });
     }
 
+    setVisible = (val, open) => {
+        if(open) {
+            this.setState({
+                openModal: true,
+                selected_user: val
+            })
+        } else {
+            this.setState({
+                openModal: false,
+                selected_user: null
+            })
+        }
+    }
+
     render() {
 
         let data_source_list = [];
@@ -106,7 +124,7 @@ class User extends React.Component {
                 contact: r.contactNumber,
                 date: r.createdDate,
                 status: r.statusType,
-                action: <Button type={'text'}>View</Button>
+                action: <Button type={'text'} onClick={()=>this.setVisible(r, true)}>View</Button>
             }
             data_source_list.push(obj);
         })
@@ -116,6 +134,72 @@ class User extends React.Component {
                 <div>
                     <h2>User</h2>
                 </div>
+
+                {
+                    this.state.openModal?
+                        <Modal
+                            title=""
+                            centered
+                            visible={this.state.openModal}
+                            onCancel={() => this.setVisible(null, false)}
+                            footer={false}
+                            width={1000}
+                        >
+                            <div>
+                                <Row>
+                                    <Col>
+                                        <div style={{marginLeft: '5px'}}>
+                                            <table>
+                                                <tr>
+                                                    <th>#ID</th>
+                                                    <td>:</td>
+                                                    <td>USER_{(this.state.selected_user!=null)?this.state.selected_user.id:""}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Ref</th>
+                                                    <td>:</td>
+                                                    <td><h3>{(this.state.selected_user!=null)?this.state.selected_user.refNo:""}</h3></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>First Name</th>
+                                                    <td>:</td>
+                                                    <td>{(this.state.selected_user!=null)?this.state.selected_user.firstName:""}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Last Name</th>
+                                                    <td>:</td>
+                                                    <td>{(this.state.selected_user!=null)?this.state.selected_user.lastName:""}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Email</th>
+                                                    <td>:</td>
+                                                    <td>{(this.state.selected_user!=null)?this.state.selected_user.email:""}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Contact</th>
+                                                    <td>:</td>
+                                                    <td>{(this.state.selected_user!=null)?this.state.selected_user.contactNumber:""}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Created Date</th>
+                                                    <td>:</td>
+                                                    <td>{(this.state.selected_user!=null)?this.state.selected_user.createdDate:""}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Status</th>
+                                                    <td>:</td>
+                                                    <td>{(this.state.selected_user!=null)?this.state.selected_user.statusType:""}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </Modal>
+                        :
+                        null
+                }
+
                 <div>
                     <Table columns={columns} dataSource={data_source_list} />
                 </div>
