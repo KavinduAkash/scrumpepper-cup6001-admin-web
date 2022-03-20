@@ -1,21 +1,21 @@
 import React from "react";
-import {Button, Card, Col, Modal, Row, Select, Table} from "antd";
+import {Button, Card, Col, message, Modal, Row, Select, Table} from "antd";
 import Cookies from 'js-cookie';
 import axios from "axios";
 
 const columns = [
-    {
-        title: '#ID',
-        dataIndex: 'corp_id',
-        key: 'corp_id',
-    },
-    {
-        title: 'Corporate Logo',
-        dataIndex: 'logo',
-        key: 'logo',
-    },
-    {
-        title: 'Corporate Name',
+            {
+                title: '#ID',
+                dataIndex: 'corp_id',
+                key: 'corp_id',
+            },
+            // {
+            //     title: 'Corporate Logo',
+            //     dataIndex: 'logo',
+            //     key: 'logo',
+            // },
+            {
+                title: 'Corporate Name',
         dataIndex: 'name',
         key: 'name',
     },
@@ -54,7 +54,8 @@ class Corporate extends React.Component {
     state = {
         data_source: [],
         openModal: false,
-        selected_corporate: null
+        selected_corporate: null,
+        status: "ACTIVE"
     }
 
     componentDidMount() {
@@ -97,7 +98,8 @@ class Corporate extends React.Component {
         if(open) {
             this.setState({
                 openModal: true,
-                selected_corporate: val
+                selected_corporate: val,
+                status: val.statusType
             })
         } else {
             this.setState({
@@ -105,6 +107,43 @@ class Corporate extends React.Component {
                 selected_corporate: null
             })
         }
+    }
+
+    changeStatus = e => {
+        this.setState({
+            status: e
+        })
+    }
+
+    statusChange = () => {
+        if(Cookies.get('68e78905f4cx')=="" ||
+            Cookies.get('68e78905f4cx')==null ||
+            Cookies.get('68e78905f4cx')==undefined) {
+            this.props.history.push("/auth/login");
+        }
+
+        let headers = {
+            'Content-Type':'application/json',
+            'Authorization':'Bearer ' + Cookies.get('68e78905f4cx')
+        };
+
+        let method = 'patch';
+
+        axios[method](`http://localhost:8080/v1/corporate/status?id=${this.state.selected_corporate.id}&st=${this.state.status}`, {headers: headers})
+            .then(async response => {
+                if(response.data.success) {
+                    message.success("Corporate status updated successfully!");
+                    this.setVisible(null, false);
+                }
+            }).catch(async error => {
+            this.setState({loading: false});
+
+            this.setState({showMessage:1});
+            setTimeout(() => {
+                this.setState({showMessage:0});
+            }, 2000);
+
+        });
     }
 
     render() {
@@ -181,23 +220,23 @@ class Corporate extends React.Component {
                             <Row>
                                 <Col xs={24} sm={24} md={12} lg={6} xl={12}>
                                     <Card title="Employees" bordered={false} style={{ width: '99%', textAlign: 'center', backgroundColor: '#90caf9', margin: '2px'}}>
-                                        <h1>{'0'}</h1>
+                                        <h1>{(this.state.selected_corporate!=null)?this.state.selected_corporate.employeeCount:0}</h1>
                                     </Card>
                                 </Col>
                                 <Col xs={24} sm={24} md={12} lg={6} xl={12}>
                                     <Card title="Projects" bordered={false} style={{ width: '99%', textAlign: 'center', backgroundColor: '#90caf9', margin: '2px'}}>
-                                        <h1>{'0'}</h1>
+                                        <h1>{(this.state.selected_corporate!=null)?this.state.selected_corporate.projectCount:0}</h1>
                                     </Card>
                                 </Col>
                             </Row>
                             <hr/>
                             <Row>
-                                <Select value={(this.state.selected_corporate!=null)?this.state.selected_corporate.statusType:"DELETE"} style={{ width: 120 }}>
+                                <Select value={(this.state.selected_corporate!=null)?this.state.selected_corporate.statusType:"DELETE"} onChange={this.changeStatus} style={{ width: 120 }}>
                                     <Option value="ACTIVE">ACTIVE</Option>
                                     <Option value="INACTIVE">INACTIVE</Option>
                                     <Option value="DELETE">DELETE</Option>
                                 </Select>
-                                <Button type="primary" style={{marginLeft: '5px'}}>Update</Button>
+                                <Button type="primary" style={{marginLeft: '5px'}} onClick={this.statusChange}>Update</Button>
                             </Row>
                         </div>
                     </Modal>

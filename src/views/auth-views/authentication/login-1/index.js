@@ -32,8 +32,8 @@ class LoginOne extends React.Component {
 								<div className="my-4">
 									<div className="text-center">
 										{/*<img className="img-fluid" src={`/img/${theme === 'light' ? 'logo.png': 'logo-white.png'}`} alt="" />*/}
-										<img src={'/img/sp-logo1.png'} alt="scrumpepper-logo" style={{marginBottom:'40px'}}/>
-										<p>Don't have an account yet? <a href="/auth/register">Sign Up</a></p>
+										<img src={'/img/logo.png'} alt="scrumpepper-logo" style={{marginBottom:'40px'}} width={150}/>
+										{/*<p>Don't have an account yet? <a href="/auth/register">Sign Up</a></p>*/}
 									</div>
 									<Row justify="center">
 										<Col xs={24} sm={24} md={20} lg={20}>

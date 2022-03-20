@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from "react-redux";
 import { Button, Form, Input, Divider, Alert } from "antd";
-import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { GoogleSVG, FacebookSVG } from 'assets/svg/icon';
 import CustomIcon from 'components/util-components/CustomIcon'
@@ -122,21 +122,24 @@ class LoginForm extends React.Component{
 				>
 					<Form.Item
 						name="email"
-						label="Email"
-						rules={[
-							{
-								required: true,
-								message: 'Please input your email',
-							},
-							{
-								type: 'email',
-								message: 'Please enter a validate email!'
-							}
-						]}>
-						<Input prefix={<MailOutlined className="text-primary"/>} onChange={this.onChangeUsername}/>
+						label="Username"
+						// rules={[
+						// 	{
+						// 		required: true,
+						// 		message: 'Please input your email',
+						// 	},
+						// 	{
+						// 		type: 'email',
+						// 		message: 'Please enter a validate email!'
+						// 	}
+						// ]}
+						required={true}
+					>
+						<Input prefix={<UserOutlined className="text-primary"/>} onChange={this.onChangeUsername}/>
 					</Form.Item>
 					<Form.Item
 						name="password"
+						label="Password"
 						// label={
 						// <div
 						// 	className={`${showForgetPassword ? 'd-flex justify-content-between w-100 align-items-center' : ''}`}>
@@ -158,6 +161,7 @@ class LoginForm extends React.Component{
 								message: 'Please input your password',
 							}
 						]}
+						required={true}
 					>
 						<Input.Password prefix={<LockOutlined className="text-primary"/>} onChange={this.onChangePassword}/>
 					</Form.Item>
