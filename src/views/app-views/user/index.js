@@ -2,6 +2,7 @@ import React from "react";
 import {Button, Card, Col, Modal, Row, Select, Table} from "antd";
 import Cookies from "js-cookie";
 import axios from "axios";
+import * as BaseUrl from "../../../server/base_urls";
 
 const columns = [
     {
@@ -79,7 +80,7 @@ class User extends React.Component {
 
         let method = 'get';
 
-        axios[method](`http://localhost:8080/v1/user/all`, {headers: headers})
+        axios[method](`${BaseUrl.SCRUM_PEPPER_API_URL(BaseUrl.URL_TYPE)}user/all`, {headers: headers})
             .then(async response => {
                 if(response.data.success) {
                     this.setState({

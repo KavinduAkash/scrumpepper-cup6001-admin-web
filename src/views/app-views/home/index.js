@@ -3,6 +3,7 @@ import {Card, Col, Row} from "antd";
 import './home.css';
 import Cookies from "js-cookie";
 import axios from "axios";
+import * as BaseUrl from "../../../server/base_urls";
 
 class Home extends React.Component {
 
@@ -28,7 +29,7 @@ class Home extends React.Component {
 
 		let method = 'get';
 
-		axios[method](`http://localhost:8080/v1/dashboard`, {headers: headers})
+		axios[method](`${BaseUrl.SCRUM_PEPPER_API_URL(BaseUrl.URL_TYPE)}dashboard`, {headers: headers})
 			.then(async response => {
 				if(response.data.success) {
 					this.setState({
